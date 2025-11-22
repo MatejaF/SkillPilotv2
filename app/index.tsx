@@ -37,7 +37,7 @@ export default function Index() {
         placeholder="Geslo"
         value={geslo}
         onChangeText={setGeslo}
-        secureTextEntry={true}   // 🔥 skrito geslo
+        secureTextEntry={true}
         autoCapitalize="none"
       />
 
