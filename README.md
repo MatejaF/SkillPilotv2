@@ -1,8 +1,35 @@
-# Welcome to your Expo app 👋
+# 🚀 SkillPilot – Karierno usmerjanje z AI
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+SkillPilot je mobilna aplikacija, izdelana za ADA Hackathon 2025, ki pomaga študentom in podjetjem:
+- načrtovati karierno pot,
+- poiskati prakse in štipendije,
+- povezati se s podjetji,
+- upravljati objave podjetij,
+- uporabljati AI za karierne nasvete.
 
-## Get started
+Aplikacija je ustvarjena z **Expo + React Native** in uporablja:
+- **Supabase** za avtentikacijo in bazo podatkov  
+- **Google Gemini API** za AI priporočila  
+- **Expo Router** za navigacijo  
+- **EAS Build** za generiranje .apk datoteke  
+
+
+
+Za prijavo ni potrebno uporabiti registracijo.
+
+
+## 🔐 Prijava (Demo Account)
+
+Za prijavo **ni potrebna registracija**.  
+Uporabite pripravljeni testni račun:
+
+- **Email:** `mateja.ferk13@gmail.com`  
+- **Geslo:** `Abcd_1234`
+
+
+## 📦 Namestitev
+
+1️⃣ Namesti odvisnosti:
 
 1. Install dependencies
 
