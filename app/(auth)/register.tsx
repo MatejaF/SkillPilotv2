@@ -44,10 +44,13 @@ export default function Index() {
 
       const supabase_id = signUpData.user.id;
 
+      // določi tip uporabnika glede na izbiro
+      const fk_vrsta = userType === 'fizicna' ? 1 : 2; // 1 = fizična oseba, 2 = podjetje
+
       // Vstavi uporabnika v tabelo uporabnik z email UNIQUE
       const { data: userData, error: userError } = await supabase
         .from('uporabnik')
-        .insert([{ supabase_id, fk_vrsta: 1, email: gmail }])
+        .insert([{ supabase_id, fk_vrsta, email: gmail }])
         .select()
         .single();
 
@@ -66,7 +69,7 @@ export default function Index() {
       } else {
         await supabase
           .from('podjetje')
-          .insert([{ id_fk_uporabnik: id_uporabnik, ime, davcna }]);
+          .insert([{ id_fk_uporabnik: id_uporabnik, ime_podjetja: ime, davcna_stevilka: davcna }]);
       }
 
       alert('Registracija uspešna! Preverite vaš email za potrditev računa.');
