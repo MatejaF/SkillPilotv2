@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     },
     modelChatItem: {
         alignSelf: 'flex-start',
-        backgroundColor: 'purple',
+        backgroundColor: '#965BCC',
     },
     text: {
         fontSize: 18,

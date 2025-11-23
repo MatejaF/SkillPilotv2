@@ -14,7 +14,20 @@ import ChatItem from './Chatitem';
 const API_KEY = Constants.expoConfig.extra.GEMINI_API_KEY;
 
 const ChatBot = () => {
-  const [chat, setChat] = useState([]);
+
+    const [chat, setChat] = useState(() => [
+    { 
+        // This is the model's first message, which will be visible to the user.
+        role: 'model',
+        parts: [
+        {
+            text: "Živijo! Sem vaš AI karierni svetovalec. Za začetek raziskujmo vaše ozadje. **Vprašanje 1:** Kakšna je vaša trenutna ali najnovejša delovna vloga in koliko let izkušenj imate na tem področju?",
+        },
+        ],
+    },
+    ]);
+
+// ... rest of the component
   const [textInput, setTextInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,7 +55,6 @@ const ChatBot = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-            // 1. Send the history array directly
             contents: newChat, 
             }),
         }
@@ -50,11 +62,10 @@ const ChatBot = () => {
 
         const data = await response.json();
 
-        // 2. Response structure also changes slightly for Gemini
         const modelResponse =
         data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I couldn\'t respond.';
 
-      // Update chat with bot response
+      // Update chat with model's response
       const updatedChat = [
         ...newChat,
         { role: 'model', parts: [{ text: modelResponse }] },
@@ -105,11 +116,11 @@ const ChatBot = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', padding: 20 },
-  title: { fontSize: 26, fontWeight: 'bold', marginBottom: 20, marginTop: 40, textAlign: 'center', color: 'purple' },
+  title: { fontSize: 26, fontWeight: 'bold', marginBottom: 20, marginTop: 40, textAlign: 'center', color: '#965BCC' },
   chatContainer: { flexGrow: 1, justifyContent: 'flex-end' },
   inputContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 20 },
   textInput: { flex: 1, height: 40, borderWidth: 2, borderColor: 'gray', borderRadius: 5, padding: 10, marginRight: 10, color: 'black', backgroundColor: '#fff' },
-  sendButton: { padding: 10, backgroundColor: 'purple', borderRadius: 5 },
+  sendButton: { padding: 10, backgroundColor: '#965BCC', borderRadius: 5 },
   sendText: { color: '#fff', fontWeight: 'bold', textAlign: 'center' },
   loading: { marginTop: 20 },
   error: { color: 'red', marginTop: 20 },

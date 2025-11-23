@@ -1,10 +1,9 @@
-import { Tabs } from 'expo-router';
+import { Stack } from 'expo-router';
 
 export default function TabLayout() {
   return (
-    <Tabs>
-      <Tabs.Screen name="index" options={{ title: 'Login' }} />
-      <Tabs.Screen name="register" options={{ title: 'Register' }} />
-    </Tabs>
+    <Stack>
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
