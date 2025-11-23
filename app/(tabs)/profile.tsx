@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import ChatBot from '../../src/Chatbot';
 
-export default function ProfileScreen() {
+export default function ProfileSheet() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Profil</Text>
+      <ChatBot />
     </View>
   );
 }
@@ -11,11 +12,5 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: '#fff',
   },
 });
