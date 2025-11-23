@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#fff',
-    borderRadius: 8, // manjše od gradientBorder, da se vidi gradient
+    borderRadius: 8, 
     padding: 12,
     fontSize: 16,
     width: '100%',

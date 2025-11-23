@@ -3,6 +3,23 @@ import React, { useEffect, useState } from "react";
 import { Button, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { supabase } from '../lib/supabase';
 
+const dummyMnenja = [
+  {
+    avtor: 'Ana K.',
+    tip: 'Ocena: 8/10',
+    ocena: 'Zelo koristno, veliko sem se naučila!'
+  },
+  {
+    avtor: 'Marko P.',
+    tip: 'Ocena: 9/10',
+    ocena: 'Super organizacija in vsebina.'
+  },
+  {
+    avtor: 'Sara L.',
+    tip: 'Ocena: 7/10',
+    ocena: 'Dobra izkušnja, priporočam.'
+  },
+];
 interface Params {
   id?: string; // id objave
 }
@@ -11,7 +28,7 @@ interface ObjavaDetail {
   naslov: string;
   dolg_opis: string;
   link: string;
-  firma: string;
+
 }
 
 export default function InformationScreen() {
@@ -37,7 +54,7 @@ useEffect(() => {
       return;
     }
 
-    setObjava(data); // npr. state za prikaz podatkov
+    setObjava(data); 
   };
 
   fetchData();
@@ -79,7 +96,18 @@ useEffect(() => {
         <View style={styles.buttonWrapper}>
           <Button title="Prijavi se" onPress={handleRegister} color="#965BCC" />
         </View>
+        <View style={styles.mnenjaContainer}>
+      <Text style={styles.mnenjaTitle}>Mnenja udeležencev</Text>
+      {dummyMnenja.map((m, idx) => (
+        <View key={idx} style={styles.mnenjaCard}>
+          <Text style={styles.mnenjaTip}>{m.tip}</Text>
+          <Text style={styles.mnenjaOcena}>{m.ocena}</Text>
+          <Text style={styles.mnenjaAvtor}>- {m.avtor}</Text>
+        </View>
+  ))}
+</View>
       </ScrollView>
+          
     </>
   );
 }
@@ -126,4 +154,38 @@ const styles = StyleSheet.create({
   }, text: {
     color: '#fff',
   },
+  mnenjaContainer: {
+  width: '100%',
+  marginTop: 30,
+  alignItems: 'center',
+},
+mnenjaTitle: {
+  fontSize: 20,
+  color: '#fff',
+  fontWeight: '700',
+  marginBottom: 15,
+},
+mnenjaCard: {
+  backgroundColor: '#3b3f46',
+  padding: 15,
+  borderRadius: 12,
+  width: '90%',
+  marginBottom: 10,
+},
+mnenjaTip: {
+  color: '#E980EC',
+  fontWeight: '600',
+  marginBottom: 5,
+},
+mnenjaOcena: {
+  color: '#ccc',
+  fontSize: 16,
+  marginBottom: 5,
+},
+mnenjaAvtor: {
+  color: '#fff',
+  fontSize: 14,
+  fontStyle: 'italic',
+  textAlign: 'right',
+},
 });

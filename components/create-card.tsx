@@ -1,22 +1,25 @@
 import { supabase } from '@/lib/supabase';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Card, IconButton, Paragraph, Title } from 'react-native-paper';
+
 interface CreateCardProps {
   title: string;
   description: string;
-  objId: number;
-  currentUserId: string; // UUID uporabnika
   onPress: () => void;
+  objId: number;
+  currentUserId: string;
+  onToggleSaved?: (objId: number, isSaved: boolean) => void;
 }
 
-const CreateCard = ({ title, description, objId, currentUserId, onPress }: CreateCardProps) => {
+const CreateCard = ({ title, description, onPress, objId, currentUserId, onToggleSaved }: CreateCardProps) => {
   const [saved, setSaved] = useState(false);
 
+  // preveri ob mountu
   useEffect(() => {
     const checkSaved = async () => {
-      if (!currentUserId) return;
       try {
         const { data } = await supabase
           .from('fizicnaoseba_objava')
@@ -25,8 +28,8 @@ const CreateCard = ({ title, description, objId, currentUserId, onPress }: Creat
           .eq('id_fk_objava', objId)
           .single();
         setSaved(!!data?.shranjen);
-      } catch (err) {
-        console.error(err);
+      } catch {
+        setSaved(false);
       }
     };
     checkSaved();
@@ -50,12 +53,14 @@ const CreateCard = ({ title, description, objId, currentUserId, onPress }: Creat
       } else {
         await supabase
           .from('fizicnaoseba_objava')
-          .insert({ id_fk_uporabnik: currentUserId, id_fk_objava: objId, shranjen: true });
+          .insert([{ id_fk_uporabnik: Number(currentUserId), id_fk_objava: objId, shranjen: true }]);
       }
 
-      setSaved(!saved);
+      const newSaved = !saved;
+      setSaved(newSaved);
+      onToggleSaved?.(objId, newSaved);
     } catch (err) {
-      console.error(err);
+      console.error('Napaka pri shranjevanju:', err);
     }
   };
 
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   actions: {
-    justifyContent: 'flex-end', // gumb desno
+    justifyContent: 'flex-end',
   },
   gradientButton: {
     borderRadius: 20,
@@ -121,6 +126,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 
 export default CreateCard;

@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#fff',
-    borderRadius: 8, // manjše od gradientBorder, da se vidi gradient
+    borderRadius: 8, 
     padding: 12,
     fontSize: 16,
     width: '100%',
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   gradientBorder: {
     width: '90%',
     borderRadius: 10,
-    padding: 2, // debelina borderja
+    padding: 2, 
     marginBottom: 20,
   },
   logo: {
@@ -229,6 +229,6 @@ const styles = StyleSheet.create({
   picker: {
     height: 45,
   width: '100%',
-  color: '#000', // tekst v pickerju
+  color: '#00000033', 
 },
 });
