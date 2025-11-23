@@ -1,27 +1,21 @@
-import React, { createContext, useContext, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-const SavedContext = createContext({
-  savedItems: [] as any[],
-  toggleSaved: (item: any) => {},
-});
-
-export const SavedProvider = ({ children }: { children: React.ReactNode }) => {
-  const [savedItems, setSavedItems] = useState<any[]>([]);
-
-  const toggleSaved = (item: any) => {
-    const exists = savedItems.find(i => i.id === item.id);
-    if (exists) {
-      setSavedItems(savedItems.filter(i => i.id !== item.id));
-    } else {
-      setSavedItems([...savedItems, item]);
-    }
-  };
-
+export default function SavedScreen() {
   return (
-    <SavedContext.Provider value={{ savedItems, toggleSaved }}>
-      {children}
-    </SavedContext.Provider>
+    <View style={styles.container}>
+      <Text style={styles.text}>Shranjeno</Text>
+    </View>
   );
-};
+}
 
-export const useSaved = () => useContext(SavedContext);
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#25292e',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: '#fff',
+  },
+});

@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   picker: {
-    height: 30,
+    height: 45,
   width: '100%',
   color: '#000', // tekst v pickerju
 },
