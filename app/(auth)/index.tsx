@@ -1,6 +1,7 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 
 export default function LoginScreen() {
@@ -29,8 +30,23 @@ export default function LoginScreen() {
         return;
       }
 
-      // Po uspešni prijavi preusmeri na glavni app
-      router.replace('../(tabs)/home');
+      const supabase_id = data.user.id;
+
+    // pridobi tip uporabnika iz baze
+    const { data: userData, error: userError } = await supabase
+      .from('uporabnik')
+      .select('fk_vrsta')
+      .eq('supabase_id', supabase_id)
+      .single();
+
+        if (userError || !userData) throw new Error('Uporabnik ni najden v bazi.');
+
+        // Preusmeri glede na tip
+        if (userData.fk_vrsta === 1) {
+          router.replace('/(tabs)/home');
+        } else {
+          router.replace('/+not-found');
+        }
 
     } catch (err: any) {
       alert(err.message);
@@ -42,40 +58,62 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Gmail"
-        value={gmail}
-        onChangeText={setGmail}
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Geslo"
-        value={geslo}
-        onChangeText={setGeslo}
-        secureTextEntry={true}
-        autoCapitalize="none"
-      />
-     <TouchableOpacity style={styles.button} onPress={handleLogin}>
-      <Text style={styles.buttonText}>Login</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity 
-    style={styles.button} 
-    onPress={() => router.push("/(auth)/register")}
-  >
-    <Text style={styles.buttonText}>Go to Register</Text>
-  </TouchableOpacity>
-
-      {/*<Link
-        href="(tabs)"
-        style={styles.button}
+      <LinearGradient
+        colors={['#965BCC', '#E980EC']}
+        start={{ x: 0.2, y: 0.2 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientBorder}
       >
-        Register
-      </Link>*/}
+        <TextInput
+          style={styles.input}
+          placeholder="Gmail"
+          value={gmail}
+          onChangeText={setGmail}
+          autoCapitalize="none"
+        />
+      </LinearGradient>
+
+      <LinearGradient
+        colors={['#965BCC', '#E980EC']}
+        start={{ x: 0.2, y: 0.2 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientBorder}
+      >
+        <TextInput
+          style={styles.input}
+          placeholder="Geslo"
+          value={geslo}
+          onChangeText={setGeslo}
+          secureTextEntry={true}
+          autoCapitalize="none"
+        />
+      </LinearGradient>
+
+      <LinearGradient
+        colors={['#965BCC', '#E980EC']}
+        start={{ x: 0.2, y: 0.2 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientBorder}
+      >
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Prijava</Text>
+        </TouchableOpacity>
+      </LinearGradient>
+
+      <TouchableOpacity
+        style={{ marginTop: 20 }}
+        onPress={() => router.push("/(auth)/register")}
+      >
+        <Text style={{ color: '#fff', textDecorationLine: 'underline', fontSize: 16 }}>
+          Registracija
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -83,30 +121,38 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: '#0e0e0eff',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 30,
   },
   input: {
-    width: '100%',
     backgroundColor: '#fff',
+    borderRadius: 8, // manjše od gradientBorder, da se vidi gradient
     padding: 12,
-    borderRadius: 8,
-    marginBottom: 20,
     fontSize: 16,
+    width: '100%',
   },
   button: {
     backgroundColor: 'transparent',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     borderRadius: 8,
-    marginTop: 10,
   },
   buttonText: {
-  fontSize: 18,
-  color: '#fff',
-  textDecorationLine: 'underline',
-  textAlign: 'center',
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  gradientBorder: {
+    width: '90%',
+    borderRadius: 10,
+    padding: 2,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 40,
   },
 });

@@ -1,6 +1,8 @@
+import { Picker } from '@react-native-picker/picker';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 const router = useRouter();
 
@@ -13,10 +15,11 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
 
    const handleRegister = async () => {
-    if (!ime || !priimek || !gmail || !geslo) {
-      alert('Izpolnite vsa polja');
-      return;
-    }
+  if (!ime || !gmail || !geslo || (userType === 'fizicna' ? !priimek : !davcna)) {
+    alert('Izpolnite vsa polja');
+    return;
+  }
+
       // Preveri validnost gesla
       const gesloRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
       if (!gesloRegex.test(geslo)) {
@@ -55,15 +58,19 @@ export default function Index() {
 
       const id_uporabnik = userData.id_uporabnik;
 
-      //Vstavi Fizicno Oseba
-      const { data: fizData, error: fizError } = await supabase
-        .from('fizicnaoseba')
-        .insert([{ id_fk_uporabnik: id_uporabnik, ime, priimek }])
-        .select()
-        .single();
-      if (fizError) throw fizError;
+       // vstavi v fizicnaoseba ali podjetje
+      if (userType === 'fizicna') {
+        await supabase
+          .from('fizicnaoseba')
+          .insert([{ id_fk_uporabnik: id_uporabnik, ime, priimek }]);
+      } else {
+        await supabase
+          .from('podjetje')
+          .insert([{ id_fk_uporabnik: id_uporabnik, ime, davcna }]);
+      }
 
       alert('Registracija uspešna! Preverite vaš email za potrditev računa.');
+
 
     } catch (err: any) {
       alert(err.message);
@@ -73,23 +80,74 @@ export default function Index() {
     }
   };
 
+    const [userType, setUserType] = useState<'fizicna' | 'podjetje'>('fizicna');
+    const [davcna, setDavcna] = useState('');
+
   return (
     <View style={styles.container}>
-
+      <Text style={{fontSize: 36, color: '#fff', marginBottom: 40}}>Dobrodošli!</Text>
+      <Image
+        source={require('../../assets/images/logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+       <LinearGradient
+      colors={['#965BCC', '#E980EC']} 
+      start={{ x: 0.2, y: 0.2 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientBorder}
+    >
+      <Picker
+        selectedValue={userType}
+        onValueChange={(itemValue) => setUserType(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Fizična oseba" value="fizicna" />
+        <Picker.Item label="Podjetje" value="podjetje" />
+      </Picker>
+    </LinearGradient>
+    <LinearGradient
+      colors={['#965BCC', '#E980EC']} 
+      start={{ x: 0.2, y: 0.2 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientBorder}
+    >
       <TextInput
         style={styles.input}
         placeholder="Ime"
         value={ime}
         onChangeText={setIme}
       />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Priimek"
-        value={priimek}
-        onChangeText={setPriimek}
-      />
-
+  </LinearGradient>
+ <LinearGradient
+  colors={['#965BCC', '#E980EC']}
+  start={{ x: 0.2, y: 0.2 }}
+  end={{ x: 1, y: 1 }}
+  style={styles.gradientBorder}
+>
+  {userType === 'fizicna' ? (
+    <TextInput
+      style={styles.input}
+      placeholder="Priimek"
+      value={priimek}
+      onChangeText={setPriimek}
+    />
+  ) : (
+    <TextInput
+      style={styles.input}
+      placeholder="Davčna številka"
+      value={davcna}
+      onChangeText={setDavcna}
+      keyboardType="numeric"
+    />
+  )}
+</LinearGradient>
+  <LinearGradient
+      colors={['#965BCC', '#E980EC']} 
+      start={{ x: 0.2, y: 0.2 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientBorder}
+    >
       <TextInput
         style={styles.input}
         placeholder="Gmail"
@@ -97,7 +155,13 @@ export default function Index() {
         onChangeText={setGmail}
         autoCapitalize="none"
       />
-
+  </LinearGradient>
+  <LinearGradient
+      colors={['#965BCC', '#E980EC']}
+      start={{ x: 0.2, y: 0.2 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientBorder}
+    >
       <TextInput
         style={styles.input}
         placeholder="Geslo"
@@ -106,16 +170,17 @@ export default function Index() {
         secureTextEntry={true}
         autoCapitalize="none"
       />
+      </LinearGradient>
+      <LinearGradient
+      colors={['#965BCC', '#E980EC']}
+      start={{ x: 0.2, y: 0.2 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientBorder}
+    >
      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-      <Text style={styles.buttonText}>Register</Text>
+      <Text style={styles.buttonText}>Registracija</Text>
     </TouchableOpacity>
-
-      {/*<Link
-        href="(tabs)"
-        style={styles.button}
-      >
-        Register
-      </Link>*/}
+    </LinearGradient>
     </View>
   );
 }
@@ -123,30 +188,44 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: '#0e0e0eff',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 30,
   },
   input: {
-    width: '100%',
     backgroundColor: '#fff',
+    borderRadius: 8, // manjše od gradientBorder, da se vidi gradient
     padding: 12,
-    borderRadius: 8,
-    marginBottom: 20,
     fontSize: 16,
+    width: '100%',
   },
   button: {
     backgroundColor: 'transparent',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     borderRadius: 8,
     marginTop: 10,
   },
   buttonText: {
   fontSize: 18,
   color: '#fff',
-  textDecorationLine: 'underline',
   textAlign: 'center',
   },
+  gradientBorder: {
+    width: '90%',
+    borderRadius: 10,
+    padding: 2, // debelina borderja
+    marginBottom: 20,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 40,
+  },
+  picker: {
+    height: 30,
+  width: '100%',
+  color: '#000', // tekst v pickerju
+},
 });
