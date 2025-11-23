@@ -63,7 +63,7 @@ export default function Index() {
         .single();
       if (fizError) throw fizError;
 
-      alert('Registracija uspešna!');
+      alert('Registracija uspešna! Preverite vaš email za potrditev računa.');
 
     } catch (err: any) {
       alert(err.message);

@@ -2,68 +2,35 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
-const router = useRouter();
 
-
-export default function Index() {
-  const [ime, setIme] = useState('');
-  const [priimek, setPriimek] = useState('');
+export default function LoginScreen() {
+  const router = useRouter();
   const [gmail, setGmail] = useState('');
   const [geslo, setGeslo] = useState('');
   const [loading, setLoading] = useState(false);
 
-   const handleRegister = async () => {
-    if (!ime || !priimek || !gmail || !geslo) {
+  const handleLogin = async () => {
+    if (!gmail || !geslo) {
       alert('Izpolnite vsa polja');
       return;
     }
-      // Preveri validnost gesla
-      const gesloRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      if (!gesloRegex.test(geslo)) {
-        alert('Geslo mora imeti vsaj 8 znakov, eno veliko, eno malo črko, številko in poseben znak');
-        return;
-      }
+
     setLoading(true);
     try {
-        // Registracija v Supabase Auth
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: gmail,
         password: geslo,
       });
 
-      if (signUpError) throw signUpError;
+      if (error) throw error;
 
-      if (!signUpData.user) {
-        alert('Ta email je že registriran ali čaka potrditev.');
-        setLoading(false);
+      if (!data.user) {
+        alert('Napaka pri prijavi. Preverite email in geslo.');
         return;
       }
 
-      const supabase_id = signUpData.user.id;
-
-      // Vstavi uporabnika v tabelo uporabnik z email UNIQUE
-      const { data: userData, error: userError } = await supabase
-        .from('uporabnik')
-        .insert([{ supabase_id, fk_vrsta: 1, email: gmail }])
-        .select()
-        .single();
-
-      if (userError || !userData) {
-        // Če UNIQUE constraint emaila ni izpolnjen
-        throw new Error('Ta email je že registriran v naši bazi.');
-      }
-
-      const id_uporabnik = userData.id_uporabnik;
-
-      //Vstavi Fizicno Oseba
-      const { data: fizData, error: fizError } = await supabase
-        .from('fizicnaoseba')
-        .insert([{ id_fk_uporabnik: id_uporabnik, ime, priimek }])
-        .select()
-        .single();
-      if (fizError) throw fizError;
-
-      alert('Registracija uspešna!');
+      // Po uspešni prijavi preusmeri na glavni app
+      router.replace('../(tabs)/home');
 
     } catch (err: any) {
       alert(err.message);
@@ -92,7 +59,7 @@ export default function Index() {
         secureTextEntry={true}
         autoCapitalize="none"
       />
-     <TouchableOpacity style={styles.button} onPress={handleRegister}>
+     <TouchableOpacity style={styles.button} onPress={handleLogin}>
       <Text style={styles.buttonText}>Login</Text>
     </TouchableOpacity>
 
