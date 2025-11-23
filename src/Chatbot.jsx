@@ -1,17 +1,16 @@
-import Constants from 'expo-constants';
 import { useState } from 'react';
 import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import ChatItem from './Chatitem';
 
-const API_KEY = Constants.expoConfig.extra.GEMINI_API_KEY;
+const API_KEY = 'AIzaSyCJzKf7QvQJO8tNdz8T4WalivbbNCw0jrc';
 
 const ChatBot = () => {
 
