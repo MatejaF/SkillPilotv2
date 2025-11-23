@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 const router = useRouter();
 
 
@@ -17,7 +17,6 @@ export default function Index() {
       alert('Izpolnite vsa polja');
       return;
     }
-    
       // Preveri validnost gesla
       const gesloRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
       if (!gesloRegex.test(geslo)) {
