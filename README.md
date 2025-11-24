@@ -14,10 +14,6 @@ Aplikacija je ustvarjena z **Expo + React Native** in uporablja:
 - **EAS Build** za generiranje .apk datoteke  
 
 
-
-Za prijavo ni potrebno uporabiti registracijo.
-
-
 ## 🔐 Prijava (Demo Account)
 
 Za prijavo **ni potrebna registracija**.  
